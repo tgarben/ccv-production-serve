@@ -69,3 +69,6 @@ Edit `config.js`. The headline and intro text are in `index.html`.
 
 ## Publish
 Push to `main`. GitHub Pages (Settings → Pages → Deploy from a branch → main / root) serves the files as they are.
+
+## CCV brand assets
+`assets/ccv/` holds files copied from ccv.church (logo, favicon, orange strip, and two photos used in the hero and the bottom call-to-action). The page uses the free Google font Heebo, which CCV's site also uses for body text.
