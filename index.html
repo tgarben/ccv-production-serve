@@ -2,6 +2,7 @@
 layout: default
 ---
 {% assign by_team = site.positions | sort: "order" | group_by: "team" | sort: "name" %}
+{% assign all_venues = site.venues | map: "name" | join: ", " %}
 
 <section class="hero">
   <div class="wrap">
@@ -16,15 +17,23 @@ layout: default
 </section>
 
 <main id="positions" class="wrap">
+  <nav class="venues" aria-label="Filter by venue">
+    <span class="venues-label">Where do you want to serve?</span>
+    <button type="button" class="chip" data-venue="all" aria-pressed="true">All venues</button>
+    {% for v in site.venues %}<button type="button" class="chip" data-venue="{{ v.slug }}" aria-pressed="false">{{ v.name }}</button>{% endfor %}
+  </nav>
+
   {% for team in by_team %}
-  <section class="team">
+  <section class="team" data-team>
     <h2>{{ team.name }}</h2>
     <div class="grid">
       {% for p in team.items %}
-      <details class="card" id="{{ p.title | slugify }}">
+      {% assign card_venues = p.venues | default: all_venues | split: ", " %}
+      <details class="card" id="{{ p.title | slugify }}" data-venues="{% for v in card_venues %}{{ v | slugify }} {% endfor %}">
         <summary>
           <span class="card-title">{{ p.title }}</span>
           <span class="card-summary">{{ p.summary }}</span>
+          <span class="card-venues">{% for v in card_venues %}<span class="tag">{{ v }}</span>{% endfor %}</span>
           <span class="card-more" aria-hidden="true"></span>
         </summary>
         <div class="card-body">
@@ -46,3 +55,31 @@ layout: default
     </p>
   </section>
 </main>
+
+<script>
+(function () {
+  var chips = document.querySelectorAll('.chip');
+  var cards = document.querySelectorAll('.card');
+  var teams = document.querySelectorAll('[data-team]');
+  function show(venue) {
+    cards.forEach(function (c) {
+      var list = c.getAttribute('data-venues').trim().split(' ');
+      c.hidden = venue !== 'all' && list.indexOf(venue) === -1;
+    });
+    teams.forEach(function (t) { t.hidden = !t.querySelector('.card:not([hidden])'); });
+    chips.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.venue === venue); });
+  }
+  function valid(v) { return Array.prototype.some.call(chips, function (b) { return b.dataset.venue === v; }); }
+  chips.forEach(function (b) {
+    b.addEventListener('click', function () {
+      show(b.dataset.venue);
+      try {
+        var url = b.dataset.venue === 'all' ? location.pathname : '?venue=' + b.dataset.venue;
+        history.replaceState(null, '', url + location.hash);
+      } catch (e) {}
+    });
+  });
+  var q = new URLSearchParams(location.search).get('venue');
+  show(q && valid(q) ? q : 'all');
+})();
+</script>

@@ -2,6 +2,7 @@
 title: Lighting
 team: Lighting
 order: 1
+venues: High School, Adults
 summary: Set the mood in the room with light.
 ---
 

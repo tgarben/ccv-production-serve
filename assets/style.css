@@ -51,6 +51,21 @@ a { color: var(--orange); }
 .btn-ghost-dark { background: transparent; border-color: var(--black); color: var(--black); }
 .btn-ghost-dark:hover { background: var(--black); border-color: var(--black); color: var(--white); }
 
+/* Venue filter */
+[hidden] { display: none !important; }
+.venues { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 28px 0 0; }
+.venues-label { width: 100%; font-size: 14px; font-weight: 700; color: var(--black); }
+.chip {
+  font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; padding: 9px 18px;
+  border-radius: 999px; border: 2px solid var(--line); background: var(--white); color: var(--black);
+  transition: background .15s, border-color .15s, color .15s;
+}
+.chip:hover { border-color: var(--black); }
+.chip[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: var(--white); }
+.chip:focus-visible { outline: 3px solid var(--black); outline-offset: 2px; }
+.card-venues { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.tag { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--soft); color: var(--ink); }
+
 /* Teams + cards */
 .team { padding: 48px 0 8px; }
 .team h2 {

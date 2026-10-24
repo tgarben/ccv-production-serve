@@ -2,6 +2,7 @@
 title: Monitor Mix
 team: Audio
 order: 2
+venues: Adults
 summary: Help the band and speakers hear what they need on stage.
 ---
 

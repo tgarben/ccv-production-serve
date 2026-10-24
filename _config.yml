@@ -3,6 +3,15 @@ title: CCV Production
 tagline: Find your place on the Production team
 intro: Every weekend, a team of volunteers makes the experience happen, so people can focus on what matters. Here's what each position does and what a weekend looks like.
 
+# Serving venues. The 'name' is what you type in a position's `venues:` line.
+venues:
+  - name: Junior High
+    slug: junior-high
+  - name: High School
+    slug: high-school
+  - name: Adults
+    slug: adults
+
 # Call to action. Leave a value blank ("") to hide that button.
 signup_url: "https://ccv.church"          # TODO: replace with your serving sign-up link
 signup_label: "Sign up to serve"

@@ -2,6 +2,7 @@
 title: Video Director
 team: Video
 order: 2
+venues: Adults
 summary: Call the shots that go to the screens and the stream.
 ---
 
