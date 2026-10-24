@@ -3,6 +3,7 @@ title: Lyrics & Slides
 team: Video
 order: 3
 summary: Run the words on screen so everyone can follow along.
+fit: technical, solo, calm, beginner
 ---
 
 ## What you do

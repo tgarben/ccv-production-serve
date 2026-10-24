@@ -4,6 +4,7 @@ team: Video
 order: 2
 venues: Adults
 summary: Call the shots that go to the screens and the stream.
+fit: visual, leader, team, fast, experienced
 ---
 
 ## What you do

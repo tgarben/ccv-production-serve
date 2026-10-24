@@ -107,6 +107,63 @@ a { color: var(--orange); }
 .card-body ul { margin: 0 0 8px; padding-left: 20px; }
 .card-body li { margin-bottom: 4px; }
 
+
+/* Global notes */
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; padding-top: 32px; }
+.note { padding: 18px 20px; border-left: 4px solid var(--orange); background: var(--soft); border-radius: 0 12px 12px 0; }
+.note h2 { margin: 0 0 4px; font-size: 18px; color: var(--black); }
+.note p { margin: 0; font-size: 15px; }
+
+/* Quiz */
+.quiz { margin-top: 24px; padding: 24px; border: 2px solid var(--black); border-radius: 18px; background: var(--white); }
+.quiz-head { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+.quiz-head h2 { margin: 0 0 4px; font-size: 22px; color: var(--black); }
+.quiz-head p { margin: 0; color: var(--muted); }
+.quiz-body { margin-top: 20px; }
+.quiz-progress { margin: 0 0 6px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); }
+.quiz-question { margin: 0 0 16px; font-size: 22px; line-height: 1.2; color: var(--black); }
+.quiz-question:focus { outline: none; }
+.quiz-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.option {
+  font: inherit; font-size: 16px; font-weight: 600; text-align: left; cursor: pointer; padding: 16px 18px;
+  border: 2px solid var(--line); border-radius: 12px; background: var(--white); color: var(--black);
+  transition: border-color .15s, background .15s;
+}
+.option:hover { border-color: var(--orange); background: #fff6f3; }
+.option:focus-visible, .link-btn:focus-visible, .term:focus-visible { outline: 3px solid var(--black); outline-offset: 2px; }
+.quiz-nav { display: flex; gap: 20px; margin-top: 16px; }
+.link-btn { font: inherit; font-size: 14px; font-weight: 600; padding: 4px 0; border: 0; background: none; color: var(--muted); cursor: pointer; text-decoration: underline; }
+.link-btn:hover { color: var(--black); }
+.quiz-results { display: grid; gap: 10px; }
+.result { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 12px; }
+.result-info { display: flex; flex-direction: column; gap: 2px; flex: 1 1 240px; }
+.result-info strong { font-size: 18px; color: var(--black); }
+.result-info span { color: var(--muted); font-size: 15px; }
+.btn-small { padding: 10px 18px; font-size: 14px; cursor: pointer; }
+
+/* Card media */
+.media { display: block; width: calc(100% + 40px); max-width: none; margin: 0 -20px 4px; background: var(--soft); }
+.media-image { height: auto; max-height: 260px; object-fit: cover; }
+.media-video { aspect-ratio: 16 / 9; }
+.media-video iframe, .media-video video { display: block; width: 100%; height: 100%; border: 0; }
+
+/* Glossary */
+.term {
+  font: inherit; padding: 0; border: 0; background: none; color: inherit; cursor: help;
+  border-bottom: 2px dotted var(--orange); line-height: inherit;
+}
+.term:hover, .term[aria-expanded="true"] { color: var(--orange); }
+.term-pop {
+  position: absolute; z-index: 10; max-width: 280px; padding: 12px 14px; border-radius: 10px;
+  background: var(--black); color: var(--white); font-size: 14px; line-height: 1.45; box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
+.glossary { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 8px; }
+.glossary summary { cursor: pointer; padding: 12px 0; font-weight: 700; color: var(--black); }
+.glossary dl { margin: 0 0 8px; display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; }
+.glossary dt { font-weight: 700; color: var(--black); }
+.glossary dd { margin: 0; color: var(--ink); }
+@media (max-width: 520px) { .glossary dl { grid-template-columns: 1fr; gap: 2px; } .glossary dd { margin-bottom: 10px; } }
+
 /* Call to action */
 .cta { margin: 56px 0 72px; padding: 40px 28px; background: var(--soft); border-radius: 18px; text-align: center; }
 .cta h2 { margin: 0 0 8px; font-size: 30px; font-weight: 800; color: var(--black); letter-spacing: -.01em; }

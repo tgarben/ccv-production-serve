@@ -30,9 +30,37 @@
   </section>
 
   <main id="positions" class="wrap">
+    <!-- Global notes: edit this text any time. -->
+    <section class="notes" aria-label="Good to know">
+      <div class="note">
+        <h2>One weekend a month</h2>
+        <p>That's all we ask. Serving here is a steady rhythm, not a full-time commitment.</p>
+      </div>
+      <div class="note">
+        <h2>Come watch first</h2>
+        <p>Not sure yet? You're welcome to shadow a weekend before you commit. No pressure, no experience needed.</p>
+      </div>
+    </section>
+
+    <section class="quiz" id="quiz" aria-labelledby="quiz-title" hidden>
+      <div class="quiz-head">
+        <div>
+          <h2 id="quiz-title">Not sure where you'd fit?</h2>
+          <p id="quiz-intro">Answer a few quick questions and we'll point you to some positions.</p>
+        </div>
+        <button class="btn" id="quiz-start" type="button">Find your fit</button>
+      </div>
+      <div class="quiz-body" id="quiz-body" hidden></div>
+    </section>
+
     <nav class="venues" aria-label="Filter by venue" id="venues"></nav>
 
     <div id="teams"><noscript>This page needs JavaScript to show the positions.</noscript></div>
+
+    <details class="glossary" id="glossary" hidden>
+      <summary>Glossary: what do those words mean?</summary>
+      <dl id="glossary-list"></dl>
+    </details>
 
     <section class="cta" id="join">
       <h2>Ready to jump in?</h2>

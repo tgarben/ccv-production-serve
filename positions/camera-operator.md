@@ -3,6 +3,7 @@ title: Camera Operator
 team: Video
 order: 1
 summary: Capture the moment for the room and the livestream.
+fit: visual, team, physical, calm, beginner
 ---
 
 ## What you do

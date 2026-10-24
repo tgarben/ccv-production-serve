@@ -3,6 +3,7 @@ title: Stage & Setup Crew
 team: Stage
 order: 1
 summary: Set up and tear down so the weekend can happen.
+fit: hands-on, physical, team, beginner
 ---
 
 ## What you do
