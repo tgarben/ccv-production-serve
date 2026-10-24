@@ -1,21 +1,22 @@
 # CCV Production: Serving Positions
 
-A simple site listing the Production serving positions. It is built by GitHub Pages (Jekyll), so there is nothing to install.
+Plain HTML, CSS and JavaScript. There is no build step. Each position is a Markdown file that the page loads and displays.
+
+## Preview locally
+Open the folder in VS Code and use **Live Server** (right-click `index.html` → Open with Live Server). Opening `index.html` by double-clicking won't work, because browsers block loading the position files that way.
 
 ## Update a position
-1. In GitHub, open the `_positions` folder and click a file (e.g. `lighting.md`).
-2. Click the pencil icon, edit, then **Commit changes**.
-3. The site updates in about a minute.
+Edit its file in `positions/` (e.g. `positions/lighting.md`) and commit. On GitHub you can do this with the pencil icon.
 
 ## Add a position
-In `_positions`, click **Add file → Create new file**, name it `something.md`, and paste:
+1. Create `positions/something.md`:
 
 ```
 ---
 title: Position Name
-team: Audio          # groups the card under this heading; a new team name makes a new section
-order: 3             # sorts within a team (1 is first)
-venues: Junior High, High School, Adults   # optional; leave this line out to show in all venues
+team: Audio
+order: 3
+venues: Junior High, High School, Adults
 summary: One short line shown on the card.
 ---
 
@@ -32,16 +33,21 @@ summary: One short line shown on the card.
 ...
 ```
 
-## Venues
-Venues (Junior High, High School, Adults) are listed in `_config.yml`. Visitors get filter buttons at the top, and you can share a direct link such as `.../ccv-production-serve/?venue=adults`.
+2. Add `"something.md"` to the list in `positions/index.json`. A file that isn't listed there won't show up.
 
-In a position, add `venues: High School, Adults` to show it only there (names must match `_config.yml`). Leave the line out to show it everywhere. If a position differs by venue (different times or duties), make one file per venue, each with its own `venues:` line.
+- `team` groups cards under a heading; a new team name makes a new section.
+- `order` sorts cards within a team (1 is first).
+- `venues` is optional. Leave it out to show the position in every venue. Names must match `config.js`.
+- If a position differs by venue (different times or duties), make one file per venue, each with its own `venues:` line.
 
 ## Remove a position
-Delete its file in `_positions`.
+Delete its file and remove its line from `positions/index.json`.
 
-## Change the sign-up link, email, or intro text
-Edit `_config.yml`.
+## Change the sign-up link, contact info, or venues
+Edit `config.js`. The headline and intro text are in `index.html`.
+
+## Share a venue link
+`https://tgarben.github.io/ccv-production-serve/?venue=adults` (also `junior-high`, `high-school`).
 
 ## Publish
-Push to GitHub, then **Settings → Pages → Deploy from a branch → main / (root)**.
+Push to `main`. GitHub Pages (Settings → Pages → Deploy from a branch → main / root) serves the files as they are.
