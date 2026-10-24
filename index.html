@@ -1,0 +1,48 @@
+---
+layout: default
+---
+{% assign by_team = site.positions | sort: "order" | group_by: "team" | sort: "name" %}
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Serve at CCV</p>
+    <h1>{{ site.tagline }}</h1>
+    <p class="lead">{{ site.intro }}</p>
+    <p class="hero-actions">
+      {% if site.signup_url != "" %}<a class="btn" href="{{ site.signup_url }}">{{ site.signup_label }}</a>{% endif %}
+      <a class="btn btn-ghost" href="#positions">See positions</a>
+    </p>
+  </div>
+</section>
+
+<main id="positions" class="wrap">
+  {% for team in by_team %}
+  <section class="team">
+    <h2>{{ team.name }}</h2>
+    <div class="grid">
+      {% for p in team.items %}
+      <details class="card" id="{{ p.title | slugify }}">
+        <summary>
+          <span class="card-title">{{ p.title }}</span>
+          <span class="card-summary">{{ p.summary }}</span>
+          <span class="card-more" aria-hidden="true"></span>
+        </summary>
+        <div class="card-body">
+          {{ p.content | markdownify }}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="cta" id="join">
+    <h2>Ready to jump in?</h2>
+    <p>No experience? No problem. Come watch a weekend, ask questions, and we'll find the right fit.</p>
+    <p class="hero-actions">
+      {% if site.signup_url != "" %}<a class="btn" href="{{ site.signup_url }}">{{ site.signup_label }}</a>{% endif %}
+      {% if site.contact_email != "" %}<a class="btn btn-ghost-dark" href="mailto:{{ site.contact_email }}">Email {{ site.contact_name }}</a>{% endif %}
+      {% if site.contact_phone != "" %}<a class="btn btn-ghost-dark" href="sms:{{ site.contact_phone }}">Text {{ site.contact_name }}</a>{% endif %}
+    </p>
+  </section>
+</main>
