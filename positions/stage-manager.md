@@ -3,7 +3,7 @@ title: Stage Manager
 venues: High School, Adults
 order: 5
 summary: Cue the band and speakers, set the stage, and keep batteries working.
-fit: hands-on, physical, team, fast
+fit: hands-on, physical, team
 ---
 
 ## What you do

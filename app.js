@@ -370,17 +370,33 @@
 
     function showResults() {
       var wanted = [].concat.apply([], picks);
-      // Only recommend positions that exist in the venue currently picked (all of them if none is).
-      var scored = positions.filter(function (p) { return !cards[p.id].el.hidden; }).map(function (p, idx) {
+      var beginner = wanted.indexOf('beginner') !== -1;
+      // Only positions in the venue currently picked (all of them if none is), and no
+      // experienced-only positions (`level: experienced`) for someone who is brand new.
+      var eligible = positions.filter(function (p) {
+        return !cards[p.id].el.hidden && !(beginner && p.data.level === 'experienced');
+      });
+      var scored = eligible.map(function (p, idx) {
         var fit = list(p.data.fit);
         var score = fit.filter(function (t) { return wanted.indexOf(t) !== -1; }).length;
-        return { p: p, score: score, idx: idx };
+        return { p: p, score: score, share: fit.length ? score / fit.length : 0, idx: idx };
       }).filter(function (r) { return r.score > 0; })
-        .sort(function (a, b) { return b.score - a.score || (+a.p.data.order || 99) - (+b.p.data.order || 99) || a.idx - b.idx; })
+        // more matching tags first; then the more specific position (higher share of its tags); then page order
+        .sort(function (a, b) {
+          return b.score - a.score || b.share - a.share ||
+            (+a.p.data.order || 99) - (+b.p.data.order || 99) || a.idx - b.idx;
+        })
         .slice(0, 3);
+      var fallback = false;
+      if (!scored.length) {
+        // Nothing matched: show where to start instead of an empty result.
+        fallback = true;
+        scored = eligible.slice().sort(function (a, b) { return (+a.data.order || 99) - (+b.data.order || 99); })
+          .slice(0, 3).map(function (p) { return { p: p }; });
+      }
 
       body.textContent = '';
-      var h = el('h3', 'quiz-question', scored.length ? "Here's where you might fit" : "We couldn't narrow it down");
+      var h = el('h3', 'quiz-question', !scored.length ? "We couldn't narrow it down" : fallback ? "Here are some places to start" : "Here's where you might fit");
       h.tabIndex = -1;
       h.dataset.focus = '';
       body.appendChild(h);

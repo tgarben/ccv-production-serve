@@ -3,7 +3,7 @@ title: Lighting
 order: 2
 summary: Control the lights on stage.
 gear: Students Venue: dot2 lighting interface | Auditorium: grandMA2
-fit: visual, technical, solo
+fit: visual, solo, calm
 ---
 
 ## What you do

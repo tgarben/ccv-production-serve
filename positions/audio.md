@@ -4,7 +4,7 @@ venues: Junior High, High School
 order: 3
 summary: Mix the band, video content, and speakers.
 gear: Students Venue: X32 audio console
-fit: technical, audio, team, fast
+fit: audio, technical, team, fast
 ---
 
 ## What you do

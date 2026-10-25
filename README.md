@@ -43,6 +43,7 @@ fit: technical, team, beginner
 - `order` sorts the cards (1 is first).
 - `gear` is optional. Name the room, then what's used there, and separate rooms with `|`. When someone picks a venue, only that room's line shows.
 - `fit` feeds the "Find your fit" quiz (see below). A position without it never appears in quiz results.
+- `level: experienced` marks a position that isn't for first-timers. The quiz won't recommend it to someone who answers that they have no experience.
 - `image` and `video` are optional (see Photos and video below).
 - The card also shows "A typical weekend" and "Who you serve with" automatically, from `config.js`.
 - `team` is optional. If you add it to positions, the cards are grouped under team headings.
@@ -55,7 +56,7 @@ Delete its file and remove its line from `positions/index.json`.
 - **Video:** add `video:` with a YouTube or Vimeo link, or a path to an `.mp4` in the repo. If a video is set, it replaces the photo, except that for an `.mp4` the photo becomes its cover image.
 
 ## "Find your fit" quiz
-The questions and answers live in `config.js`. Each answer adds tags (like `technical` or `team`), and a position scores a point for every tag it shares with the answers, using the tags in its `fit:` line. The top three show up as results, limited to positions in the venue the visitor has picked. To change the quiz, edit the questions in `config.js`; to change who it recommends, edit each position's `fit:` line.
+The questions and answers live in `config.js`. Each answer adds tags (like `technical` or `team`), and a position scores a point for every tag it shares with the answers, using the tags in its `fit:` line. The top three show up as results, limited to positions in the venue the visitor has picked and, for someone with no experience, to positions that aren't marked `level: experienced`. Ties go to the more specific position (the one with fewer tags to match). If nothing matches, the first few positions are shown as places to start. To change the quiz, edit the questions in `config.js`; to change who it recommends, edit each position's `fit:` line.
 
 ## Glossary
 Add terms to `glossary` in `config.js`. The first mention of each term in a card is underlined, and tapping it shows the explanation. All terms are also listed in a Glossary at the bottom of the page.

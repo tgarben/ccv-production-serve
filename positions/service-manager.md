@@ -3,6 +3,7 @@ title: Service Manager
 venues: High School, Adults
 order: 6
 summary: Call the transitions and lead the team through the service.
+level: experienced
 fit: leader, team, fast, experienced
 ---
 
