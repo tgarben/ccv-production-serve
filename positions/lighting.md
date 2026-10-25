@@ -1,22 +1,13 @@
 ---
 title: Lighting
-team: Lighting
-order: 1
-venues: High School, Adults
-summary: Set the mood in the room with light.
-fit: visual, technical, solo, calm, beginner
+order: 2
+summary: Control the lights on stage.
+gear: Students Venue: dot2 lighting interface | Auditorium: grandMA2
+fit: visual, technical, solo
 ---
 
 ## What you do
-You run the lighting console, following cues and the energy of the service to light the stage and room.
-
-## A typical weekend
-- 7:45 AM: Call time
-- 8:30 AM: Sound check and cue setup
-- 9:00 & 11:00 AM: Services
+You control the lights on stage during the service.
 
 ## Skills & training
-No experience needed. Training provided. An eye for detail helps.
-
-## Who you serve with
-Team lead: *Name* (*email or phone*). Edit this line.
+More involved than Lyrics & Slides, and less demanding than Video Director.

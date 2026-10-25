@@ -1,6 +1,7 @@
 (function () {
   var cfg = window.SITE_CONFIG;
-  var cards = {};      // card id -> { el, data }
+  var venues = cfg.venues;
+  var cards = {};      // card id -> { el, data, body }
   var setVenue = function () {};
 
   // ---------- helpers ----------
@@ -17,6 +18,10 @@
 
   function list(s) {
     return s ? s.split(',').map(function (v) { return v.trim(); }).filter(Boolean) : [];
+  }
+
+  function venueNames() {
+    return venues.map(function (v) { return v.name; });
   }
 
   // Split a Markdown file into its `key: value` header and body.
@@ -41,7 +46,12 @@
         return fetch('positions/' + f).then(function (r) {
           if (!r.ok) { console.warn('Missing position file: ' + f); return null; }
           return r.text();
-        }).then(function (t) { return t && parse(t); });
+        }).then(function (t) {
+          if (!t) return null;
+          var p = parse(t);
+          p.file = f;
+          return p;
+        });
       }));
     }).then(function (all) { return all.filter(Boolean); });
   }
@@ -89,23 +99,105 @@
     return null;
   }
 
+  // ---------- card sections built from config.js ----------
+  // Anything with data-scope="slug slug" is hidden when a venue outside that list is picked.
+  function section(title, scope) {
+    var w = el('div', 'card-section');
+    w.dataset.scope = scope;
+    w.appendChild(el('h2', null, title));
+    return w;
+  }
+
+  // front matter `gear: Students Venue: dot2 | Auditorium: grandMA2`
+  function buildGear(d, inCard) {
+    if (!d.gear) return null;
+    var entries = d.gear.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+    var ul = el('ul');
+    var all = {};
+    entries.forEach(function (entry) {
+      var i = entry.indexOf(':');
+      var room = entry.slice(0, i).trim();
+      var what = entry.slice(i + 1).trim();
+      var scope = inCard.filter(function (v) { return v.room.toLowerCase() === room.toLowerCase(); })
+        .map(function (v) { return slug(v.name); });
+      if (!scope.length) {
+        console.warn('"' + d.title + '": no venue in "' + room + '" for this position');
+        scope = inCard.map(function (v) { return slug(v.name); });
+      }
+      scope.forEach(function (s) { all[s] = true; });
+      var li = el('li');
+      li.dataset.scope = scope.join(' ');
+      li.appendChild(el('strong', null, room + ': '));
+      li.appendChild(document.createTextNode(what));
+      ul.appendChild(li);
+    });
+    var sec = section("What you'll use", Object.keys(all).join(' '));
+    sec.appendChild(ul);
+    return sec;
+  }
+
+  function buildWeekend(inCard) {
+    var sec = section('A typical weekend', inCard.map(function (v) { return slug(v.name); }).join(' '));
+    inCard.forEach(function (v) {
+      var block = el('div', 'sched');
+      block.dataset.scope = slug(v.name);
+      block.appendChild(el('p', 'sched-venue', v.name + (v.room ? ' (' + v.room + ')' : '')));
+      var ul = el('ul');
+      v.schedule.forEach(function (line) { ul.appendChild(el('li', null, line)); });
+      block.appendChild(ul);
+      sec.appendChild(block);
+    });
+    return sec;
+  }
+
+  // Group venues that share a lead, so one lead isn't listed twice.
+  function leadGroups(vs) {
+    var groups = [];
+    vs.forEach(function (v) {
+      var g = groups.filter(function (x) { return x.email === v.leadEmail; })[0];
+      if (!g) {
+        g = { name: v.leadName, role: v.leadRole, email: v.leadEmail, venues: [] };
+        groups.push(g);
+      }
+      g.venues.push(v.name);
+    });
+    return groups;
+  }
+
+  function buildLeads(inCard) {
+    var sec = section('Who you serve with', inCard.map(function (v) { return slug(v.name); }).join(' '));
+    var ul = el('ul');
+    leadGroups(inCard).forEach(function (g) {
+      var li = el('li');
+      li.dataset.scope = g.venues.map(slug).join(' ');
+      var a = el('a', null, g.name);
+      a.href = 'mailto:' + g.email;
+      li.appendChild(a);
+      li.appendChild(document.createTextNode((g.role ? ', ' + g.role : '') + ' (' + g.venues.join(', ') + ')'));
+      ul.appendChild(li);
+    });
+    sec.appendChild(ul);
+    return sec;
+  }
+
   // ---------- cards ----------
   function buildCard(p) {
     var d = p.data;
-    var names = d.venues ? list(d.venues) : cfg.venues;
+    var names = d.venues ? list(d.venues) : venueNames();
     names.forEach(function (n) {
-      if (cfg.venues.indexOf(n) === -1) console.warn('"' + d.title + '": unknown venue "' + n + '"');
+      if (venueNames().indexOf(n) === -1) console.warn('"' + d.title + '": unknown venue "' + n + '"');
     });
+    var inCard = venues.filter(function (v) { return names.indexOf(v.name) !== -1; });
 
     var card = el('details', 'card');
-    card.id = slug(d.title || '');
-    card.dataset.venues = names.map(slug).join(' ');
+    card.id = slug(p.file.replace(/\.md$/, ''));
+    card.dataset.venues = inCard.map(function (v) { return slug(v.name); }).join(' ');
 
     var sum = el('summary');
     sum.appendChild(el('span', 'card-title', d.title));
     sum.appendChild(el('span', 'card-summary', d.summary));
     var tags = el('span', 'card-venues');
-    names.forEach(function (n) { tags.appendChild(el('span', 'tag', n)); });
+    inCard.forEach(function (v) { tags.appendChild(el('span', 'tag', v.name)); });
     sum.appendChild(tags);
     var more = el('span', 'card-more');
     more.setAttribute('aria-hidden', 'true');
@@ -115,30 +207,47 @@
     var body = el('div', 'card-body');
     var media = buildMedia(d);
     if (media) body.appendChild(media);
+
+    // Markdown: "What you do" first, then the generated sections, then "Skills & training" onward.
     var text = el('div', 'card-text');
     text.innerHTML = marked.parse(p.body);
+    var tail = null;
+    var skills = Array.prototype.filter.call(text.children, function (n) {
+      return n.tagName === 'H2' && /skills/i.test(n.textContent);
+    })[0];
+    if (skills) {
+      tail = el('div', 'card-text');
+      var moving = [];
+      for (var n = skills; n; n = n.nextSibling) moving.push(n);
+      moving.forEach(function (n) { tail.appendChild(n); });
+    }
     body.appendChild(text);
+    var gear = buildGear(d, inCard);
+    if (gear) body.appendChild(gear);
+    body.appendChild(buildWeekend(inCard));
+    if (tail) body.appendChild(tail);
+    body.appendChild(buildLeads(inCard));
     card.appendChild(body);
 
-    cards[card.id] = { el: card, data: d, text: text };
+    cards[card.id] = { el: card, data: d, body: body };
     p.id = card.id;
     return card;
   }
 
-  function renderTeams(positions) {
-    var teams = {};
+  function renderCards(positions) {
+    var groups = {};
     positions.forEach(function (p) {
-      var t = p.data.team || 'Other';
-      (teams[t] = teams[t] || []).push(p);
+      var t = p.data.team || '';
+      (groups[t] = groups[t] || []).push(p);
     });
     var root = document.getElementById('teams');
     root.textContent = '';
-    Object.keys(teams).sort().forEach(function (name) {
+    Object.keys(groups).sort().forEach(function (name) {
       var section = el('section', 'team');
       section.dataset.team = '';
-      section.appendChild(el('h2', null, name));
+      if (name) section.appendChild(el('h2', null, name));
       var grid = el('div', 'grid');
-      teams[name].sort(function (a, b) { return (+a.data.order || 99) - (+b.data.order || 99); })
+      groups[name].sort(function (a, b) { return (+a.data.order || 99) - (+b.data.order || 99); })
         .forEach(function (p) { grid.appendChild(buildCard(p)); });
       section.appendChild(grid);
       root.appendChild(section);
@@ -158,7 +267,7 @@
   function renderVenues() {
     var nav = document.getElementById('venues');
     nav.appendChild(el('span', 'venues-label', 'Where do you want to serve?'));
-    [['all', 'All venues']].concat(cfg.venues.map(function (v) { return [slug(v), v]; }))
+    [['all', 'All venues']].concat(venues.map(function (v) { return [slug(v.name), v.name]; }))
       .forEach(function (v) {
         var b = el('button', 'chip', v[1]);
         b.type = 'button';
@@ -168,17 +277,32 @@
       });
   }
 
+  function renderVenueInfo(venue) {
+    var box = document.getElementById('venue-info');
+    var v = venues.filter(function (x) { return slug(x.name) === venue; })[0];
+    if (!v) { box.hidden = true; return; }
+    box.textContent = v.name + (v.room ? ' meets in the ' + v.room + '.' : '.') +
+      (v.minAge ? ' Minimum age to serve: ' + v.minAge + '.' : '');
+    box.hidden = false;
+  }
+
   function setupFilter() {
     var chips = document.querySelectorAll('.chip');
     var cardEls = document.querySelectorAll('.card');
     var teams = document.querySelectorAll('[data-team]');
+    var scoped = document.querySelectorAll('.card [data-scope]');
 
     setVenue = function (venue) {
       cardEls.forEach(function (c) {
         c.hidden = venue !== 'all' && c.dataset.venues.split(' ').indexOf(venue) === -1;
       });
+      scoped.forEach(function (e) {
+        e.hidden = venue !== 'all' && e.dataset.scope.split(' ').indexOf(venue) === -1;
+      });
       teams.forEach(function (t) { t.hidden = !t.querySelector('.card:not([hidden])'); });
       chips.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.venue === venue)); });
+      renderVenueInfo(venue);
+      renderContact(venue);
       try {
         var url = venue === 'all' ? location.pathname : '?venue=' + venue;
         history.replaceState(null, '', url + location.hash);
@@ -203,7 +327,6 @@
 
     var startBtn = document.getElementById('quiz-start');
     var body = document.getElementById('quiz-body');
-    var answers = [];
     var picks = [];
 
     function focusHeading() {
@@ -247,7 +370,8 @@
 
     function showResults() {
       var wanted = [].concat.apply([], picks);
-      var scored = positions.map(function (p, idx) {
+      // Only recommend positions that exist in the venue currently picked (all of them if none is).
+      var scored = positions.filter(function (p) { return !cards[p.id].el.hidden; }).map(function (p, idx) {
         var fit = list(p.data.fit);
         var score = fit.filter(function (t) { return wanted.indexOf(t) !== -1; }).length;
         return { p: p, score: score, idx: idx };
@@ -324,25 +448,28 @@
       });
     document.getElementById('glossary').hidden = false;
 
-    // underline the first mention of each term in every card
+    // underline the first mention of each term in every card (once per venue section)
     var alt = terms.slice().sort(function (a, b) { return b.length - a.length; })
       .map(function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|');
     var re = new RegExp('\\b(' + alt + ')(?:s)?\\b', 'gi');
 
     Object.keys(cards).forEach(function (id) {
-      var root = cards[id].text;
+      var root = cards[id].body;
       var used = {};
       var nodes = [];
       var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
       while (walker.nextNode()) nodes.push(walker.currentNode);
       nodes.forEach(function (node) {
         if (node.parentNode.closest('a, button, code')) return;
+        var scopeEl = node.parentNode.closest('[data-scope]');
+        var scopeKey = scopeEl ? scopeEl.dataset.scope : '';
         var text = node.nodeValue, last = 0, frag = null, m;
         re.lastIndex = 0;
         while ((m = re.exec(text))) {
           var key = m[1].toLowerCase();
-          if (used[key]) continue;
-          used[key] = true;
+          var usedKey = scopeKey + '|' + key;
+          if (used[usedKey]) continue;
+          used[usedKey] = true;
           frag = frag || document.createDocumentFragment();
           frag.appendChild(document.createTextNode(text.slice(last, m.index)));
           var b = el('button', 'term', m[0]);
@@ -397,41 +524,51 @@
     window.addEventListener('resize', hide);
   }
 
-  // ---------- call-to-action buttons ----------
-  function renderButtons() {
+  // ---------- call-to-action: sign-up button plus the lead for the chosen venue ----------
+  function renderSignup() {
     var signup = document.querySelector('[data-signup]');
     var actions = document.getElementById('cta-actions');
-    if (cfg.signupUrl) {
-      signup.href = cfg.signupUrl;
-      signup.textContent = cfg.signupLabel;
-      signup.hidden = false;
-      var a = el('a', 'btn', cfg.signupLabel);
-      a.href = cfg.signupUrl;
-      actions.appendChild(a);
-    }
-    if (cfg.contactEmail) {
-      var m = el('a', 'btn btn-ghost-dark', 'Email ' + cfg.contactName);
-      m.href = 'mailto:' + cfg.contactEmail +
-        (cfg.contactSubject ? '?subject=' + encodeURIComponent(cfg.contactSubject) : '');
-      actions.appendChild(m);
-    }
-    if (cfg.contactName && cfg.contactRole) {
-      var who = document.getElementById('cta-contact');
-      who.textContent = 'Questions? Reach out to ' + cfg.contactName + ', ' + cfg.contactRole + '.';
-      who.hidden = false;
-    }
-    if (cfg.contactPhone) {
-      var t = el('a', 'btn btn-ghost-dark', 'Text ' + cfg.contactName);
-      t.href = 'sms:' + cfg.contactPhone;
-      actions.appendChild(t);
-    }
+    if (!cfg.signupUrl) return;
+    signup.href = cfg.signupUrl;
+    signup.textContent = cfg.signupLabel;
+    signup.hidden = false;
+    var a = el('a', 'btn', cfg.signupLabel);
+    a.href = cfg.signupUrl;
+    actions.appendChild(a);
+  }
+
+  function renderContact(venue) {
+    var vs = venue === 'all' ? venues : venues.filter(function (v) { return slug(v.name) === venue; });
+    var groups = leadGroups(vs);
+    var many = groups.length > 1;
+    var who = document.getElementById('cta-contact');
+    var actions = document.getElementById('cta-actions');
+
+    Array.prototype.slice.call(actions.querySelectorAll('[data-email]')).forEach(function (n) { n.remove(); });
+    if (!groups.length) { who.hidden = true; return; }
+
+    who.textContent = 'Questions? Reach out to ' + groups.map(function (g) {
+      var label = g.name + (g.role ? ', ' + g.role : '');
+      if (many) return label + ' (' + g.venues.join(', ') + ')';
+      return g.role ? label : label + ', ' + g.venues.join(' and ') + ' lead';
+    }).join(' or ') + '.';
+    who.hidden = false;
+
+    groups.forEach(function (g) {
+      var subject = (cfg.contactSubject || '') + ' (' + g.venues.join(', ') + ')';
+      var b = el('a', 'btn btn-ghost-dark', 'Email ' + g.name + (many ? ' (' + g.venues.join(', ') + ')' : ''));
+      b.href = 'mailto:' + g.email + (cfg.contactSubject ? '?subject=' + encodeURIComponent(subject) : '');
+      b.dataset.email = '';
+      actions.appendChild(b);
+    });
   }
 
   // ---------- go ----------
-  renderButtons();
+  renderSignup();
+  renderContact('all');
   renderVenues();
   loadPositions().then(function (positions) {
-    renderTeams(positions);
+    renderCards(positions);
     setupFilter();
     setupQuiz(positions);
     setupGlossary();

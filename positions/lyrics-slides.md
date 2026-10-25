@@ -1,20 +1,12 @@
 ---
-title: Lyrics & Slides
-team: Video
-order: 3
-summary: Run the words on screen so everyone can follow along.
+title: Lyrics & Slides (ProPresenter)
+order: 1
+summary: Run the song lyrics and supporting slides on the screens.
 fit: technical, solo, calm, beginner
 ---
 
 ## What you do
-You run lyrics and slides in ProPresenter, staying one step ahead of the music and message.
-
-## A typical weekend
-- 8:00 AM: Call time, load the service
-- 9:00 & 11:00 AM: Services
+You run ProPresenter during the service. It puts the song lyrics and the supporting slides on the screens.
 
 ## Skills & training
-A great first position. No experience needed and we'll train you.
-
-## Who you serve with
-Team lead: *Name* (*email or phone*). Edit this line.
+This is our lowest-entry position, a good place to start. If you want to learn more later, you can work toward other positions.
