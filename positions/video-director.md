@@ -1,6 +1,6 @@
 ---
 title: Video Director
-venues: Adults
+venues: High School, Adults
 order: 4
 summary: Control what goes on the projectors and manage the live stream.
 gear: Auditorium: Panasonic video switcher
