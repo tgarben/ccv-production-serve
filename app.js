@@ -411,8 +411,14 @@
     }
     if (cfg.contactEmail) {
       var m = el('a', 'btn btn-ghost-dark', 'Email ' + cfg.contactName);
-      m.href = 'mailto:' + cfg.contactEmail;
+      m.href = 'mailto:' + cfg.contactEmail +
+        (cfg.contactSubject ? '?subject=' + encodeURIComponent(cfg.contactSubject) : '');
       actions.appendChild(m);
+    }
+    if (cfg.contactName && cfg.contactRole) {
+      var who = document.getElementById('cta-contact');
+      who.textContent = 'Questions? Reach out to ' + cfg.contactName + ', ' + cfg.contactRole + '.';
+      who.hidden = false;
     }
     if (cfg.contactPhone) {
       var t = el('a', 'btn btn-ghost-dark', 'Text ' + cfg.contactName);

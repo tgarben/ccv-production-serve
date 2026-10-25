@@ -181,6 +181,7 @@ a { color: var(--orange); }
 .cta { margin-top: 72px; padding: 56px 0; background: var(--soft); text-align: center; }
 .cta h2 { margin: 0 0 8px; font-size: 30px; font-weight: 800; color: var(--black); letter-spacing: -.01em; }
 .cta p { margin: 0 auto 20px; max-width: 34em; }
+.cta .cta-contact { font-weight: 600; color: var(--black); }
 .cta .hero-actions { justify-content: center; }
 @media (min-width: 900px) {
   /* Full-bleed band: the art sits at the right edge of the screen, the text lines up with the page content. */

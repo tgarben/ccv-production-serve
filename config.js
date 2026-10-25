@@ -3,6 +3,8 @@ window.SITE_CONFIG = {
   signupUrl: "https://ccv.church/serve",
   signupLabel: "Sign up to serve",
   contactName: "Tyler Garben",             // TODO
+  contactRole: "East Mesa Production Manager",   // shown under "Ready to jump in?"; leave "" to hide
+  contactSubject: "Interested in serving on Production",   // pre-filled email subject
   contactEmail: "tylergarben@ccv.church",      // TODO
   contactPhone: "",                     // optional, e.g. "555-555-5555"
 
