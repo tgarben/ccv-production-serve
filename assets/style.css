@@ -61,7 +61,7 @@ a { color: var(--orange); }
 .btn:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
 .btn-ghost { background: transparent; border-color: var(--white); }
 .btn-ghost:hover { background: var(--white); border-color: var(--white); color: var(--black); }
-.btn-ghost-dark { background: transparent; border-color: var(--black); color: var(--black); }
+.btn-ghost-dark { background: var(--white); border-color: var(--black); color: var(--black); }
 .btn-ghost-dark:hover { background: var(--black); border-color: var(--black); color: var(--white); }
 
 /* Venue filter */
@@ -193,7 +193,7 @@ a { color: var(--orange); }
   /* Full-bleed band: the art sits at the right edge of the screen, the text lines up with the page content. */
   .cta { padding: 104px 0; text-align: left; background: var(--white) url("ccv/cta-art.png") right top 50% / auto 140% no-repeat; border-top: 1px solid var(--line); }
   .cta p { margin-left: 0; max-width: 24em; }
-  .cta .hero-actions { justify-content: flex-start; }
+  .cta .hero-actions { justify-content: flex-start; max-width: none; }
 }
 
 /* Footer */

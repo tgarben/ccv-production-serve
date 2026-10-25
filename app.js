@@ -547,11 +547,11 @@
     Array.prototype.slice.call(actions.querySelectorAll('[data-email]')).forEach(function (n) { n.remove(); });
     if (!groups.length) { who.hidden = true; return; }
 
-    who.textContent = 'Questions? Reach out to ' + groups.map(function (g) {
-      var label = g.name + (g.role ? ', ' + g.role : '');
-      if (many) return label + ' (' + g.venues.join(', ') + ')';
-      return g.role ? label : label + ', ' + g.venues.join(' and ') + ' lead';
-    }).join(' or ') + '.';
+    // One lead: say who they are. Several leads: the buttons below name each one, so keep the line short.
+    var g0 = groups[0];
+    who.textContent = many
+      ? "Questions? Reach out to your venue's lead."
+      : 'Questions? Reach out to ' + g0.name + ', ' + (g0.role || g0.venues.join(' and ') + ' lead') + '.';
     who.hidden = false;
 
     groups.forEach(function (g) {
