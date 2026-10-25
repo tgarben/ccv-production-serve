@@ -17,7 +17,7 @@ window.SITE_CONFIG = {
       room: "Students Venue",
       minAge: "Junior High age or older",
       leadName: "Ayden Solis",
-      leadRole: "",
+      leadRole: "East Area Team Member",
       leadEmail: "aydensolis@ccv.church",
       schedule: [
         "2:30 PM: Call time",
@@ -29,7 +29,7 @@ window.SITE_CONFIG = {
       room: "Auditorium",
       minAge: "High School age or older",
       leadName: "Ayden Solis",
-      leadRole: "",
+      leadRole: "East Area Team Member",
       leadEmail: "aydensolis@ccv.church",
       schedule: [
         "2:30 PM: Call time",
