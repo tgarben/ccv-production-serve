@@ -61,7 +61,7 @@ The questions and answers live in `config.js`. Each answer adds tags (like `tech
 Add terms to `glossary` in `config.js`. The first mention of each term in a card is underlined, and tapping it shows the explanation. All terms are also listed in a Glossary at the bottom of the page.
 
 ## Global notes
-"One weekend a month", "Come watch first", "Before you serve" and "Room to grow" are plain HTML near the top of `index.html`, inside the `notes` section. Edit the text there.
+"One weekend a month", "Come watch first" and "Before you serve" are plain HTML near the top of `index.html`, inside the `notes` section. Edit the text there.
 
 ## Share a venue link
 `https://tgarben.github.io/ccv-production-serve/?venue=adults` (also `junior-high`, `high-school`).
