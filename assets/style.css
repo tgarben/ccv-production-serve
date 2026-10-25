@@ -19,7 +19,7 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
-.wrap { max-width: 1800px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px); }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px); }
 a { color: var(--orange); }
 
 /* Header */
@@ -178,12 +178,13 @@ a { color: var(--orange); }
 @media (max-width: 520px) { .glossary dl { grid-template-columns: 1fr; gap: 2px; } .glossary dd { margin-bottom: 10px; } }
 
 /* Call to action */
-.cta { margin: 56px 0 72px; padding: 40px 28px; background: var(--soft); border-radius: 18px; text-align: center; }
+.cta { margin-top: 72px; padding: 56px 0; background: var(--soft); text-align: center; }
 .cta h2 { margin: 0 0 8px; font-size: 30px; font-weight: 800; color: var(--black); letter-spacing: -.01em; }
 .cta p { margin: 0 auto 20px; max-width: 34em; }
 .cta .hero-actions { justify-content: center; }
 @media (min-width: 900px) {
-  .cta { position: relative; overflow: hidden; text-align: left; padding: 64px 48px; background: var(--white) url("ccv/cta-art.png") right -40px top 50% / auto 150% no-repeat; border: 1px solid var(--line); }
+  /* Full-bleed band: the art sits at the right edge of the screen, the text lines up with the page content. */
+  .cta { padding: 104px 0; text-align: left; background: var(--white) url("ccv/cta-art.png") right top 50% / auto 140% no-repeat; border-top: 1px solid var(--line); }
   .cta p { margin-left: 0; max-width: 24em; }
   .cta .hero-actions { justify-content: flex-start; }
 }
